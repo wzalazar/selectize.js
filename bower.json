@@ -30,7 +30,7 @@
 	],
 	"dependencies": {
 		"jquery": ">=1.7.0",
-		"sifter": "git://github.com/wzalazar/selectize.js.git",
+		"sifter": "https://github.com/wzalazar/sifter.js.git#0.4.2",
 		"microplugin": "0.0.x"
 	},
 	"devDependencies": {

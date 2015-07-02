@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "microplugin": "0.0.3",
-    "sifter": "git://github.com/wzalazar/selectize.js.git"
+    "sifter": "https://github.com/wzalazar/sifter.js.git#0.4.2"
   },
   "devDependencies": {
     "grunt": "0.4.x",
