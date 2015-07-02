@@ -7,7 +7,7 @@
 	"readmeFilename": "README.md",
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/brianreavis/selectize.js.git"
+		"url": "git://github.com/wzalazar/selectize.js.git"
 	},
 	"main": [
 		"dist/css/selectize.css",
@@ -30,7 +30,7 @@
 	],
 	"dependencies": {
 		"jquery": ">=1.7.0",
-		"sifter": "0.4.x",
+		"sifter": "git://github.com/wzalazar/selectize.js.git",
 		"microplugin": "0.0.x"
 	},
 	"devDependencies": {
