@@ -88,6 +88,41 @@
 				});
 				</script>
 			</div>
+
+
+				<div class="demo">
+				<h2>&lt;input type="text"&gt;</h2>
+				<div class="control-group">
+					<label for="input-tags">Tags:</label>
+					<input type="text" id="select-place-3" class="demo-default">
+				</div>
+				<script>
+				var places = [  
+{"airportCode":"Santiago de Chile (SCL) - Arturo Merino Benitez, Chile AEP","cityName":"Santiago de Chile - Arturo Merino Benitez, Chile"},
+{"airportCode":"Sao Paulo (SAO), Brasil AEP","cityName":"Sao Paulo, Brasil"},
+{"airportCode":"Sao Paulo (SAO), Guarulos (GRU), Brasil AEP","cityName":"Sao Paulo, Guarulos, Brasil"},
+{"airportCode":"Sao Paulo (SAO), Campinhas (CGH), BrasilAEP","cityName":"Sao Paulo, Campinhas, Brasil"},
+{"airportCode":"Sao Paulo (SAO), Viracopos (VRP), Brasil AEP","cityName":"Sao Paulo, Viracopos, Brasil"},
+{"airportCode":"MDQ","cityName":"Mar del Plata, Argentina"}
+				];
+
+				
+
+				$("#select-place-3").selectize({
+				    maxItems: 1,
+					valueField: 'cityName',
+					labelField: 'cityName',
+					searchField: 'airportCode',
+				    sortField: [{field: 'cityName', direction: 'asc'}],
+				    options: places,
+				    sortMatchFirst:{field: 'cityName'}
+				});
+				</script>
+			</div>
+
+
+
+
 		
 		</div>
 	</body>
