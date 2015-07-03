@@ -39,7 +39,7 @@
   ],
   "dependencies": {
     "jquery": ">=1.7.0",
-    "sifter": "https://github.com/wzalazar/sifter.js.git#0.4.4",
+    "sifter": "https://github.com/wzalazar/sifter.js.git#0.4.5",
     "microplugin": "0.0.x",
     "lodash": "~3.10.0"
   },
@@ -48,3 +48,5 @@
     "bootstrap3": "bootstrap#3.2"
   }
 }
+
+
