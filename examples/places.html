@@ -28,6 +28,36 @@
 				</div>
 				<script>
 				var places = [  
+				   {"airportCode":"AEP","cityName":"Santiago de Chile (SCL) - Arturo Merino Benitez (SCL), Chile"},
+				   {"airportCode":"AEP","cityName":"Sao Paulo (SAO), Brasil"},
+				   {"airportCode":"AEP","cityName":"Sao Paulo (SAO), Guarulos (GRU), Brasil"},
+				   {"airportCode":"AEP","cityName":"Sao Paulo (SAO), Campinhas (CGH), Brasil"},
+				   {"airportCode":"AEP","cityName":"Sao Paulo (SAO), Viracopos (VRP), Brasil"}
+				];
+
+				
+
+				$("#select-place").selectize({
+				    maxItems: 1,
+					valueField: 'cityName',
+					labelField: 'cityName',
+					searchField: 'cityName',
+				    sortField: [{field: 'cityName', direction: 'asc'}],
+				    options: places,
+				    sortMatchFirst:{field: 'cityName'}
+				});
+				</script>
+			</div>
+
+
+			<div class="demo">
+				<h2>&lt;input type="text"&gt;</h2>
+				<div class="control-group">
+					<label for="input-tags">Tags:</label>
+					<input type="text" id="select-place-2" class="demo-default">
+				</div>
+				<script>
+				var places = [  
 				   {"airportCode":"TAO","cityName":"Quiaaaaaa aaaaaaaa"},
 				   {"airportCode":"TAO","cityName":"Quingdao"},
 				   {"airportCode":"IQQ","cityName":"Iquique"},
@@ -43,13 +73,11 @@
 				   {"airportCode":"AEP","cityName":"Gendota Patqquikk (QKO), China"},
 				   {"airportCode":"AEP","cityCode":"BUE"},
 				   {"airportCode":"AEP","cityName":"equitos"},
-				   {"airportCode":"AEP","cityName":"Sao Paulo (SAO), Brasil"},
-				   {"airportCode":"AEP","cityName":"Sao Paulo, Guarulos (GRU), Brasil"},
-				   {"airportCode":"AEP","cityName":"Sao Paulo, Campinhas (CGH), Brasil"},
-				   {"airportCode":"AEP","cityName":"Sao Paulo, Viracopos (VRP), Brasil"}
 				];
 
-				$("#select-place").selectize({
+				
+
+				$("#select-place-2").selectize({
 				    maxItems: 1,
 					valueField: 'cityName',
 					labelField: 'cityName',
