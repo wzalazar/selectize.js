@@ -12748,7 +12748,6 @@
         });
         self.sortMatchFirst(firstItems,fielName);
       }
-      
       self.iterator(self.items, function(item, id) {
         score = fn_score(item);
         if (options.filter === false || score > 0) {
@@ -14843,6 +14842,8 @@
      * @returns {object}
      */
     getItem: function(value) {
+      var value = _.trim($(this.$control).find('.item').data('value'));
+      $(this.$control).find('.item').attr('data-value',value);
       return this.getElementWithValue(value, this.$control.children());
     },
   
@@ -14876,7 +14877,8 @@
         var self = this;
         var inputMode = self.settings.mode;
         var i, active, value_next, wasFull;
-        value = hash_key(value);
+        value = _.trim(hash_key(value));
+
   
         if (self.items.indexOf(value) !== -1) {
           if (inputMode === 'single') self.close();
