@@ -12404,7 +12404,7 @@
 
     var i, n, regex, letter;
     var tokens = [];
-    var words = query.split(/ +/);
+    var words = query.split(this.settings.tokenizePattern || / +/);
 
     for (i = 0, n = words.length; i < n; i++) {
       regex = escape_regex(words[i]);
@@ -12685,16 +12685,17 @@
   Sifter.prototype.sortMatchFirst = function(items,fielName) {
     if (items.length){
       var maxLength = _.chain(items)
-        .sortBy(function(place){ return _.unescape(place[fielName]).length; })
-        .pluck(fielName)
-        .last()
-        .value()
-        .length;
+          .sortBy(function(place){ return _.unescape(place[fielName]).length; })
+          .pluck(fielName)
+          .last()
+          .value()
+          .length;
 
       return _.map(items,function(item){
             item[fielName] = _.padRight(item[fielName],parseInt(maxLength),' ');
             return item;
           });
+      
     }
   };
 
@@ -12735,7 +12736,6 @@
 
     // perform search and sort
     if (query.length) {
-
       if (options.sortMatchFirst){
         var 
           fielName = options.sortMatchFirst.field,
@@ -12748,13 +12748,14 @@
         });
         self.sortMatchFirst(firstItems,fielName);
       }
+      
       self.iterator(self.items, function(item, id) {
         score = fn_score(item);
         if (options.filter === false || score > 0) {
           search.items.push({'score': score, 'id': id});
         }
       });
-    
+      
     } else {
       self.iterator(self.items, function(item, id) {
         search.items.push({'score': 1, 'id': id});
@@ -12857,6 +12858,8 @@
 
   return Sifter;
 }));
+
+
 
 
 
@@ -13498,7 +13501,7 @@
     });
   
     // search system
-    self.sifter = new Sifter(this.options, {diacritics: settings.diacritics});
+    self.sifter = new Sifter(this.options, {diacritics: settings.diacritics,tokenizePattern : settings.tokenizePattern});
   
     // build options table
     if (self.settings.options) {
@@ -14407,12 +14410,12 @@
       if (typeof sort === 'string') {
         sort = [{field: sort}];
       }
-  
       return {
         fields      : settings.searchField,
         conjunction : settings.searchConjunction,
         sort        : sort,
-        sortMatchFirst : settings.sortMatchFirst
+        sortMatchFirst : settings.sortMatchFirst || undefined,
+        tokenizePattern: settings.tokenizePattern || / +/
       };
     },
   
@@ -14842,8 +14845,10 @@
      * @returns {object}
      */
     getItem: function(value) {
-      var value = _.trim($(this.$control).find('.item').data('value'));
-      $(this.$control).find('.item').attr('data-value',value);
+      if (this.settings.sortMatchFirst){
+        var value = _.trim($(this.$control).find('.item').data('value'));
+        $(this.$control).find('.item').attr('data-value',value);
+      }
       return this.getElementWithValue(value, this.$control.children());
     },
   
@@ -14877,8 +14882,10 @@
         var self = this;
         var inputMode = self.settings.mode;
         var i, active, value_next, wasFull;
-        value = _.trim(hash_key(value));
-
+        
+        if (this.settings.sortMatchFirst){
+          value = _.trim(hash_key(value));
+        }
   
         if (self.items.indexOf(value) !== -1) {
           if (inputMode === 'single') self.close();
