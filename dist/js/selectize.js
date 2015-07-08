@@ -498,7 +498,7 @@
 		});
 	
 		// search system
-		self.sifter = new Sifter(this.options, {diacritics: settings.diacritics});
+		self.sifter = new Sifter(this.options, {diacritics: settings.diacritics,tokenizePattern : settings.tokenizePattern});
 	
 		// build options table
 		if (self.settings.options) {
@@ -1411,7 +1411,9 @@
 			return {
 				fields      : settings.searchField,
 				conjunction : settings.searchConjunction,
-				sort        : sort
+				sort        : sort,
+		        sortMatchFirst : settings.sortMatchFirst || undefined,
+		        tokenizePattern: settings.tokenizePattern || / +/
 			};
 		},
 	
@@ -1841,6 +1843,10 @@
 		 * @returns {object}
 		 */
 		getItem: function(value) {
+			if (this.settings.sortMatchFirst){
+		    	var value = _.trim($(this.$control).find('.item').data('value'));
+		        $(this.$control).find('.item').attr('data-value',value);
+		    }
 			return this.getElementWithValue(value, this.$control.children());
 		},
 	
@@ -1874,6 +1880,11 @@
 				var self = this;
 				var inputMode = self.settings.mode;
 				var i, active, value_next, wasFull;
+
+				if (this.settings.sortMatchFirst){
+		          value = _.trim(hash_key(value));
+		        }
+		        
 				value = hash_key(value);
 	
 				if (self.items.indexOf(value) !== -1) {
