@@ -12483,15 +12483,22 @@
      * @param {object} token
      * @return {number}
      */
-    var scoreValue = function(value, token) {
+    var scoreValue = function(value, token, sifter) {
       var score, pos;
 
       if (!value) return 0;
       value = String(value || '');
       pos = value.search(token.regex);
-      if (pos === -1) return 0;
+      if (pos === -1){
+        return 0;
+      } 
       score = token.string.length / value.length;
-      if (pos === 0) score += 0.5;
+      if (sifter.options.sortMatchFirst){
+        return sifter.maxPos - pos;
+      }
+      if (pos === 0){
+        score += 0.5;
+      } 
       return score;
     };
 
@@ -12503,23 +12510,24 @@
      * @param {object} data
      * @return {number}
      */
-    var scoreObject = (function() {
+    var scoreObject = (_.bind(function() {
+      var self = this;
       var field_count = fields.length;
       if (!field_count) {
         return function() { return 0; };
       }
       if (field_count === 1) {
         return function(token, data) {
-          return scoreValue(data[fields[0]], token);
+          return scoreValue(data[fields[0]], token,self.sifter);
         };
       }
       return function(token, data) {
         for (var i = 0, sum = 0; i < field_count; i++) {
-          sum += scoreValue(data[fields[i]], token);
+          sum += scoreValue(data[fields[i]], token,self.sifter);
         }
         return sum / field_count;
       };
-    })();
+    },{'sifter':this}))();
 
     if (!token_count) {
       return function() { return 0; };
@@ -12699,6 +12707,19 @@
     }
   };
 
+
+  Sifter.prototype.getMaxPos = function(items,fielName,search) {
+     var maxPosition = 0;
+
+     _.each(items, function(item){
+       if (item[fielName].search(search.tokens[0].regex) > maxPosition){
+         maxPosition = item[fielName].search(search.tokens[0].regex);
+       }
+     });
+
+     return maxPosition;
+  };
+
   /**
    * Searches through all items and returns a sorted array of matches.
    *
@@ -12736,17 +12757,13 @@
 
     // perform search and sort
     if (query.length) {
+      this.options = options;
       if (options.sortMatchFirst){
         var 
-          fielName = options.sortMatchFirst.field,
-          firstItems = [];
+          fielName = options.sortMatchFirst.field;
 
-        _.each(self.items, function(item){
-          if (item[fielName].search(search.tokens[0].regex)===0){
-            firstItems.push(item);
-          }
-        });
-        self.sortMatchFirst(firstItems,fielName);
+        this.maxPos = self.getMaxPos(self.items,fielName,search);
+        self.sortMatchFirst(self.items,fielName);
       }
       
       self.iterator(self.items, function(item, id) {

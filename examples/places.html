@@ -24,6 +24,52 @@
 				<h2>&lt;input type="text"&gt;</h2>
 				<div class="control-group">
 					<label for="input-tags">Tags:</label>
+					<input type="text" id="select-place-5" class="demo-default">
+				</div>
+				<script>
+				var places = [  
+					{'cityName' :'New Bern - Craven County Regional (EWN), North Carolina - USA'},
+					{'cityName' :'New Orleans - Louis Armstrong Intl. (MSY), Louisiana - USA'},
+					{'cityName' :'New Plymouth - New Plymouth (NPL), Nueva Zelanda'},
+					{'cityName' :'Newburgh - Newburgh Stewart Airport (SWF), New York - USA'},
+					{'cityName' :'Newcastle - Newcastle (NCL), United Kingdom'},
+					{'cityName' :'Wilmington - New Hanover (ILM), North Carolina - USA'},
+					{'cityName' :'Nueva York - Newark International Airport (EWR), New York - USA'},
+					{'cityName' :'Albany, NY - Albany Intl. Airport (ALB), New York - USA'},
+					{'cityName' :'Albuquerque - Albuquerque Intl. (ABQ), New Mexico - USA'},
+					{'cityName' :'Bathurst - Bathurst (ZBF), New Brunswick - Canadá'},
+					{'cityName' :'Búfalo - Buffalo Niagara Intl. (BUF), New York - USA'},
+					{'cityName' :'Elmira - Elmira Regional Airport (ELM), New York - USA'},
+					{'cityName' :'Fredericton - Federicton Intl Airport (YFC), New Brunswick - Canadá'},
+					{'cityName' :'Binghamton - Greater Binghamton (BGM), New York - USA'},
+					{'cityName' :'Moncton - Greater Moncton (YQM), New Brunswick - Canadá'},
+					{'cityName' :'Siracusa - Hancock Intl. (SYR), New York - USA'},
+					{'cityName' :'Nueva York - John F. Kennedy International (JFK), New York - USA'},
+					{'cityName' :'Nueva York - La Guardia Airport (LGA), New York - USA'},
+					{'cityName' :'Rochester, NY - Rochester (ROC), New York - USA'},
+					{'cityName' :'Saint Johns - Saint Johns (YYT), Newfoundland and Labrador - Canadá'},
+					{'cityName' :'Ithaca - Tompkins County (ITH), New York - USA'},
+					{'cityName' :'White Plains - Westchester County (HPN), New York - USA'}
+				];
+
+				$("#select-place-5").selectize({
+				    maxItems: 1,
+					valueField: 'cityName',
+					labelField: 'cityName',
+					searchField: 'cityName',
+				    sortField: [{field: 'cityName', direction: 'asc'}],
+				    options: places,
+				    sortMatchFirst:{field: 'cityName'},
+				    tokenizePattern: ';'
+				});
+				</script>
+			</div>
+
+
+			<div class="demo">
+				<h2>&lt;input type="text"&gt;</h2>
+				<div class="control-group">
+					<label for="input-tags">Tags:</label>
 					<input type="text" id="select-place" class="demo-default">
 				</div>
 				<script>
@@ -150,7 +196,6 @@
 			});
 			</script>
 		</div>
-
 
 
 		
