@@ -12744,51 +12744,51 @@
    * @returns {object}
    */
   Sifter.prototype.search = function(query, options) {
-    var self = this, value, score, search, calculateScore;
-    var fn_sort;
-    var fn_score;
+      var self = this, value, score, search, calculateScore;
+      var fn_sort;
+      var fn_score;
 
-    search  = this.prepareSearch(query, options);
-    options = search.options;
-    query   = search.query;
+      search  = this.prepareSearch(query, options);
+      options = search.options;
+      query   = search.query;
 
-    // generate result scoring function
-    fn_score = options.score || self.getScoreFunction(search);
+      // generate result scoring function
+      fn_score = options.score || self.getScoreFunction(search);
 
-    // perform search and sort
-    if (query.length) {
-      this.options = options;
-      if (options.sortMatchFirst){
-        var 
-          fielName = options.sortMatchFirst.field;
+      // perform search and sort
+      if (query.length) {
+        this.options = options;
+        if (options.sortMatchFirst){
+          var 
+            fielName = options.sortMatchFirst.field;
 
-        this.maxPos = self.getMaxPos(self.items,fielName,search);
-        self.sortMatchFirst(self.items,fielName);
-      }
-      
-      self.iterator(self.items, function(item, id) {
-        score = fn_score(item);
-        if (options.filter === false || score > 0) {
-          search.items.push({'score': score, 'id': id});
+          this.maxPos = self.getMaxPos(self.items,fielName,search);
+          self.sortMatchFirst(self.items,fielName);
         }
-      });
-      
-    } else {
-      self.iterator(self.items, function(item, id) {
-        search.items.push({'score': 1, 'id': id});
-      });
-    }
+        
+        self.iterator(self.items, function(item, id) {
+          score = fn_score(item);
+          if (options.filter === false || score > 0) {
+            search.items.push({'score': score, 'id': id});
+          }
+        });
+        
+      } else {
+        self.iterator(self.items, function(item, id) {
+          search.items.push({'score': 1, 'id': id});
+        });
+      }
 
-    fn_sort = self.getSortFunction(search, options);
-    if (fn_sort) search.items.sort(fn_sort);
+      fn_sort = self.getSortFunction(search, options);
+      if (fn_sort) search.items.sort(fn_sort);
 
-    // apply limits
-    search.total = search.items.length;
-    if (typeof options.limit === 'number') {
-      search.items = search.items.slice(0, options.limit);
-    }
+      // apply limits
+      search.total = search.items.length;
+      if (typeof options.limit === 'number') {
+        search.items = search.items.slice(0, options.limit);
+      }
 
-    return search;
+      return search;
   };
 
   // utilities
@@ -14449,38 +14449,40 @@
      * @returns {object}
      */
     search: function(query) {
-      var i, value, score, result, calculateScore;
-      var self     = this;
-      var settings = self.settings;
-      var options  = this.getSearchOptions();
-  
-      // validate user-provided result scoring function
-      if (settings.score) {
-        calculateScore = self.settings.score.apply(this, [query]);
-        if (typeof calculateScore !== 'function') {
-          throw new Error('Selectize "score" setting must be a function that returns a function');
-        }
-      }
-  
-      // perform search
-      if (query !== self.lastQuery) {
-        self.lastQuery = query;
-        result = self.sifter.search(query, $.extend(options, {score: calculateScore}));
-        self.currentResults = result;
-      } else {
-        result = $.extend(true, {}, self.currentResults);
-      }
-  
-      // filter out selected items
-      if (settings.hideSelected) {
-        for (i = result.items.length - 1; i >= 0; i--) {
-          if (self.items.indexOf(hash_key(result.items[i].id)) !== -1) {
-            result.items.splice(i, 1);
+      var minSearch = this.settings.minSearch || 0;
+      if (query.length > minSearch){
+        var i, value, score, result, calculateScore;
+        var self     = this;
+        var settings = self.settings;
+        var options  = this.getSearchOptions();
+    
+        // validate user-provided result scoring function
+        if (settings.score) {
+          calculateScore = self.settings.score.apply(this, [query]);
+          if (typeof calculateScore !== 'function') {
+            throw new Error('Selectize "score" setting must be a function that returns a function');
           }
         }
+    
+        // perform search
+        if (query !== self.lastQuery) {
+          self.lastQuery = query;
+          result = self.sifter.search(query, $.extend(options, {score: calculateScore}));
+          self.currentResults = result;
+        } else {
+          result = $.extend(true, {}, self.currentResults);
+        }
+    
+        // filter out selected items
+        if (settings.hideSelected) {
+          for (i = result.items.length - 1; i >= 0; i--) {
+            if (self.items.indexOf(hash_key(result.items[i].id)) !== -1) {
+              result.items.splice(i, 1);
+            }
+          }
+        }
+        return result;
       }
-  
-      return result;
     },
   
     /**
@@ -14500,112 +14502,115 @@
       var self              = this;
       var query             = $.trim(self.$control_input.val());
       var results           = self.search(query);
-      var $dropdown_content = self.$dropdown_content;
-      var active_before     = self.$activeOption && hash_key(self.$activeOption.attr('data-value'));
-  
-      // build markup
-      n = results.items.length;
-      if (typeof self.settings.maxOptions === 'number') {
-        n = Math.min(n, self.settings.maxOptions);
-      }
-  
-      // render and group available options individually
-      groups = {};
-      groups_order = [];
-  
-      for (i = 0; i < n; i++) {
-        option      = self.options[results.items[i].id];
-        option_html = self.render('option', option);
-        optgroup    = option[self.settings.optgroupField] || '';
-        optgroups   = $.isArray(optgroup) ? optgroup : [optgroup];
-  
-        for (j = 0, k = optgroups && optgroups.length; j < k; j++) {
-          optgroup = optgroups[j];
-          if (!self.optgroups.hasOwnProperty(optgroup)) {
-            optgroup = '';
-          }
-          if (!groups.hasOwnProperty(optgroup)) {
-            groups[optgroup] = [];
-            groups_order.push(optgroup);
-          }
-          groups[optgroup].push(option_html);
+      if (results){
+        var $dropdown_content = self.$dropdown_content;
+        var active_before     = self.$activeOption && hash_key(self.$activeOption.attr('data-value'));
+    
+        // build markup
+        n = results.items.length;
+        if (typeof self.settings.maxOptions === 'number') {
+          n = Math.min(n, self.settings.maxOptions);
         }
-      }
-  
-      // sort optgroups
-      if (this.settings.lockOptgroupOrder) {
-        groups_order.sort(function(a, b) {
-          var a_order = self.optgroups[a].$order || 0;
-          var b_order = self.optgroups[b].$order || 0;
-          return a_order - b_order;
-        });
-      }
-  
-      // render optgroup headers & join groups
-      html = [];
-      for (i = 0, n = groups_order.length; i < n; i++) {
-        optgroup = groups_order[i];
-        if (self.optgroups.hasOwnProperty(optgroup) && groups[optgroup].length) {
-          // render the optgroup header and options within it,
-          // then pass it to the wrapper template
-          html_children = self.render('optgroup_header', self.optgroups[optgroup]) || '';
-          html_children += groups[optgroup].join('');
-          html.push(self.render('optgroup', $.extend({}, self.optgroups[optgroup], {
-            html: html_children
-          })));
-        } else {
-          html.push(groups[optgroup].join(''));
-        }
-      }
-  
-      $dropdown_content.html(html.join(''));
-  
-      // highlight matching terms inline
-      if (self.settings.highlight && results.query.length && results.tokens.length) {
-        for (i = 0, n = results.tokens.length; i < n; i++) {
-          highlight($dropdown_content, results.tokens[i].regex);
-        }
-      }
-  
-      // add "selected" class to selected options
-      if (!self.settings.hideSelected) {
-        for (i = 0, n = self.items.length; i < n; i++) {
-          self.getOption(self.items[i]).addClass('selected');
-        }
-      }
-  
-      // add create option
-      has_create_option = self.canCreate(query);
-      if (has_create_option) {
-        $dropdown_content.prepend(self.render('option_create', {input: query}));
-        $create = $($dropdown_content[0].childNodes[0]);
-      }
-  
-      // activate
-      self.hasOptions = results.items.length > 0 || has_create_option;
-      if (self.hasOptions) {
-        if (results.items.length > 0) {
-          $active_before = active_before && self.getOption(active_before);
-          if ($active_before && $active_before.length) {
-            $active = $active_before;
-          } else if (self.settings.mode === 'single' && self.items.length) {
-            $active = self.getOption(self.items[0]);
-          }
-          if (!$active || !$active.length) {
-            if ($create && !self.settings.addPrecedence) {
-              $active = self.getAdjacentOption($create, 1);
-            } else {
-              $active = $dropdown_content.find('[data-selectable]:first');
+    
+        // render and group available options individually
+        groups = {};
+        groups_order = [];
+    
+        for (i = 0; i < n; i++) {
+          option      = self.options[results.items[i].id];
+          option_html = self.render('option', option);
+          optgroup    = option[self.settings.optgroupField] || '';
+          optgroups   = $.isArray(optgroup) ? optgroup : [optgroup];
+    
+          for (j = 0, k = optgroups && optgroups.length; j < k; j++) {
+            optgroup = optgroups[j];
+            if (!self.optgroups.hasOwnProperty(optgroup)) {
+              optgroup = '';
             }
+            if (!groups.hasOwnProperty(optgroup)) {
+              groups[optgroup] = [];
+              groups_order.push(optgroup);
+            }
+            groups[optgroup].push(option_html);
           }
-        } else {
-          $active = $create;
         }
-        self.setActiveOption($active);
-        if (triggerDropdown && !self.isOpen) { self.open(); }
-      } else {
-        self.setActiveOption(null);
-        if (triggerDropdown && self.isOpen) { self.close(); }
+    
+        // sort optgroups
+        if (this.settings.lockOptgroupOrder) {
+          groups_order.sort(function(a, b) {
+            var a_order = self.optgroups[a].$order || 0;
+            var b_order = self.optgroups[b].$order || 0;
+            return a_order - b_order;
+          });
+        }
+    
+        // render optgroup headers & join groups
+        html = [];
+        for (i = 0, n = groups_order.length; i < n; i++) {
+          optgroup = groups_order[i];
+          if (self.optgroups.hasOwnProperty(optgroup) && groups[optgroup].length) {
+            // render the optgroup header and options within it,
+            // then pass it to the wrapper template
+            html_children = self.render('optgroup_header', self.optgroups[optgroup]) || '';
+            html_children += groups[optgroup].join('');
+            html.push(self.render('optgroup', $.extend({}, self.optgroups[optgroup], {
+              html: html_children
+            })));
+          } else {
+            html.push(groups[optgroup].join(''));
+          }
+        }
+    
+        $dropdown_content.html(html.join(''));
+    
+        // highlight matching terms inline
+        if (self.settings.highlight && results.query.length && results.tokens.length) {
+          for (i = 0, n = results.tokens.length; i < n; i++) {
+            highlight($dropdown_content, results.tokens[i].regex);
+          }
+        }
+    
+        // add "selected" class to selected options
+        if (!self.settings.hideSelected) {
+          for (i = 0, n = self.items.length; i < n; i++) {
+            self.getOption(self.items[i]).addClass('selected');
+          }
+        }
+    
+        // add create option
+        has_create_option = self.canCreate(query);
+        if (has_create_option) {
+          $dropdown_content.prepend(self.render('option_create', {input: query}));
+          $create = $($dropdown_content[0].childNodes[0]);
+        }
+    
+        // activate
+        self.hasOptions = results.items.length > 0 || has_create_option;
+        if (self.hasOptions) {
+          if (results.items.length > 0) {
+            $active_before = active_before && self.getOption(active_before);
+            if ($active_before && $active_before.length) {
+              $active = $active_before;
+            } else if (self.settings.mode === 'single' && self.items.length) {
+              $active = self.getOption(self.items[0]);
+            }
+            if (!$active || !$active.length) {
+              if ($create && !self.settings.addPrecedence) {
+                $active = self.getAdjacentOption($create, 1);
+              } else {
+                $active = $dropdown_content.find('[data-selectable]:first');
+              }
+            }
+          } else {
+            $active = $create;
+          }
+          self.setActiveOption($active);
+          if (triggerDropdown && !self.isOpen) { self.open(); }
+        } else {
+          self.setActiveOption(null);
+          if (triggerDropdown && self.isOpen) { self.close(); }
+        }
+        
       }
     },
   

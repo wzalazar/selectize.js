@@ -28,33 +28,33 @@
 				</div>
 				<script>
 				var places = [  
-				{'cityName' :'New Bern (EWN) - Craven County Regional (EWN), North Carolina - USA'},
-				{'cityName' :'New Orleans (MSY) - Louis Armstrong Intl. (MSY), Louisiana - USA'},
-				{'cityName' :'New Plymouth (NPL) - New Plymouth (NPL), Nueva Zelanda'},
-				{'cityName' :'Newburgh (SWF) - Newburgh Stewart Airport (SWF), New York - USA'},
-				{'cityName' :'Newcastle (NCL) - Newcastle (NCL), United Kingdom'},
-				{'cityName' :'Wilmington (ILM) - New Hanover (ILM), North Carolina - USA'},
-				{'cityName' :'Nueva York (NYC) - Newark International Airport (EWR), New York - USA'},
-				{'cityName' :'Albany (ALB), NY - Albany Intl. Airport (ALB), New York - USA'},
-				{'cityName' :'Albuquerque (ABQ) - Albuquerque Intl. (ABQ), New Mexico - USA'},
-				{'cityName' :'Bathurst (ZBF) - Bathurst (ZBF), New Brunswick - Canadá'},
-				{'cityName' :'Búfalo (BUF) - Buffalo Niagara Intl. (BUF), New York - USA'},
-				{'cityName' :'Elmira (ELM) - Elmira Regional Airport (ELM), New York - USA'},
-				{'cityName' :'Fredericton (YFC) - Federicton Intl Airport (YFC), New Brunswick - Canadá'},
-				{'cityName' :'Binghamton (BGM) - Greater Binghamton (BGM), New York - USA'},
-				{'cityName' :'Moncton (YQM) - Greater Moncton (YQM), New Brunswick - Canadá'},
-				{'cityName' :'Siracusa (SYR) - Hancock Intl. (SYR), New York - USA'},
-				{'cityName' :'Nueva York (NYC) - John F. Kennedy International (JFK), New York - USA'},
-				{'cityName' :'Nueva York (NYC) - La Guardia Airport (LGA), New York - USA'},
-				{'cityName' :'Rochester (ROC), NY - Rochester (ROC), New York - USA'},
-				{'cityName' :'Saint Johns (YYT) - Saint Johns (YYT), Newfoundland and Labrador - Canadá'},
-				{'cityName' :'Ithaca (ITH) - Tompkins County (ITH), New York - USA'},
-				{'cityName' :'White Plains (HPN) - Westchester County (HPN), New York - USA'},
-				{'cityName' :'Santiago de Chile (SCL) - Arturo Merino Benitez, Chile (SCL) - Chile'},
-				{'cityName' :'Sao Paulo (SAO) - Brasil'},
-				{'cityName' :'Sao Paulo (SAO) - Guarulos (GRU) - Brasil'},
-				{'cityName' :'Sao Paulo (SAO) - Congonhas (CGH) - Brasil'},
-				{'cityName' :'Sao Paulo (SAO) - Viracopos (VCP) - Brasil'}
+				{'type':0,'cityName' :'New Bern (EWN) - Craven County Regional (EWN), North Carolina - USA'},
+				{'type':0,'cityName' :'New Plymouth (NPL) - New Plymouth (NPL), Nueva Zelanda'},
+				{'type':0,'cityName' :'Newburgh (SWF) - Newburgh Stewart Airport (SWF), New York - USA'},
+				{'type':0,'cityName' :'New Orleans (MSY) - Louis Armstrong Intl. (MSY), Louisiana - USA'},
+				{'type':0,'cityName' :'Newcastle (NCL) - Newcastle (NCL), United Kingdom'},
+				{'type':0,'cityName' :'Wilmington (ILM) - New Hanover (ILM), North Carolina - USA'},
+				{'type':0,'cityName' :'Nueva York (NYC) - Newark International Airport (EWR), New York - USA'},
+				{'type':0,'cityName' :'Albany (ALB), NY - Albany Intl. Airport (ALB), New York - USA'},
+				{'type':0,'cityName' :'Albuquerque (ABQ) - Albuquerque Intl. (ABQ), New Mexico - USA'},
+				{'type':0,'cityName' :'Bathurst (ZBF) - Bathurst (ZBF), New Brunswick - Canadá'},
+				{'type':0,'cityName' :'Búfalo (BUF) - Buffalo Niagara Intl. (BUF), New York - USA'},
+				{'type':0,'cityName' :'Elmira (ELM) - Elmira Regional Airport (ELM), New York - USA'},
+				{'type':0,'cityName' :'Fredericton (YFC) - Federicton Intl Airport (YFC), New Brunswick - Canadá'},
+				{'type':0,'cityName' :'Binghamton (BGM) - Greater Binghamton (BGM), New York - USA'},
+				{'type':0,'cityName' :'Moncton (YQM) - Greater Moncton (YQM), New Brunswick - Canadá'},
+				{'type':0,'cityName' :'Siracusa (SYR) - Hancock Intl. (SYR), New York - USA'},
+				{'type':0,'cityName' :'Nueva York (NYC) - John F. Kennedy International (JFK), New York - USA'},
+				{'type':0,'cityName' :'Nueva York (NYC) - La Guardia Airport (LGA), New York - USA'},
+				{'type':0,'cityName' :'Rochester (ROC), NY - Rochester (ROC), New York - USA'},
+				{'type':0,'cityName' :'Saint Johns (YYT) - Saint Johns (YYT), Newfoundland and Labrador - Canadá'},
+				{'type':0,'cityName' :'Ithaca (ITH) - Tompkins County (ITH), New York - USA'},
+				{'type':0,'cityName' :'White Plains (HPN) - Westchester County (HPN), New York - USA'},
+				{'type':0,'cityName' :'Santiago de Chile (SCL) - Arturo Merino Benitez, Chile (SCL) - Chile'},
+				{'type':1,'cityName' :'Sao Paulo (SAO) - zBrasil'},
+				{'type':0,'cityName' :'Sao Paulo (SAO) - Guarulos (GRU) - zBrasil'},
+				{'type':0,'cityName' :'Sao Paulo (SAO) - Congonhas (CGH) - zBrasil'},
+				{'type':0,'cityName' :'Sao Paulo (SAO) - Viracopos (VCP) - zBrasil'}
 				];
 
 				$("#select-place-5").selectize({
@@ -62,10 +62,11 @@
 					valueField: 'cityName',
 					labelField: 'cityName',
 					searchField: 'cityName',
-				    sortField: [{field: 'cityName', direction: 'asc'}],
+				    sortField: [{field: 'type', direction: 'desc'}],
 				    options: places,
 				    sortMatchFirst:{field: 'cityName'},
-				    tokenizePattern: '@'
+				    tokenizePattern: '@',
+				    minSearch:2
 				});
 				</script>
 			</div>
