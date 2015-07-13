@@ -1433,41 +1433,43 @@
 		 */
 		search: function(query) {
 			var minSearch = this.settings.minSearch || 0;
-      		if (query.length > minSearch){
-				var i, value, score, result, calculateScore;
-				var self     = this;
-				var settings = self.settings;
-				var options  = this.getSearchOptions();
-		
-				// validate user-provided result scoring function
-				if (settings.score) {
-					calculateScore = self.settings.score.apply(this, [query]);
-					if (typeof calculateScore !== 'function') {
-						throw new Error('Selectize "score" setting must be a function that returns a function');
-					}
-				}
-		
-				// perform search
-				if (query !== self.lastQuery) {
-					self.lastQuery = query;
-					result = self.sifter.search(query, $.extend(options, {score: calculateScore}));
-					self.currentResults = result;
-				} else {
-					result = $.extend(true, {}, self.currentResults);
-				}
-		
-				// filter out selected items
-				if (settings.hideSelected) {
-					for (i = result.items.length - 1; i >= 0; i--) {
-						if (self.items.indexOf(hash_key(result.items[i].id)) !== -1) {
-							result.items.splice(i, 1);
-						}
-					}
-				}
-		
-				return result;
+			if (query.length < minSearch){
+				this.close();
+				return;
 			}
-		},
+
+			var i, value, score, result, calculateScore;
+			var self     = this;
+			var settings = self.settings;
+			var options  = this.getSearchOptions();
+
+			// validate user-provided result scoring function
+			if (settings.score) {
+			calculateScore = self.settings.score.apply(this, [query]);
+				if (typeof calculateScore !== 'function') {
+				  throw new Error('Selectize "score" setting must be a function that returns a function');
+				}
+			}
+
+			// perform search
+			if (query !== self.lastQuery) {
+				self.lastQuery = query;
+				result = self.sifter.search(query, $.extend(options, {score: calculateScore}));
+				self.currentResults = result;
+			} else {
+				result = $.extend(true, {}, self.currentResults);
+			}
+
+			// filter out selected items
+			if (settings.hideSelected) {
+				for (i = result.items.length - 1; i >= 0; i--) {
+				  if (self.items.indexOf(hash_key(result.items[i].id)) !== -1) {
+				    result.items.splice(i, 1);
+				  }
+				}
+			}
+			return result;
+	    },
 	
 		/**
 		 * Refreshes the list of available options shown
