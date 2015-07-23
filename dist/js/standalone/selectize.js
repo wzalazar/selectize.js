@@ -14449,12 +14449,6 @@
      * @returns {object}
      */
     search: function(query) {
-      var minSearch = this.settings.minSearch || 0;
-      if (query.length < minSearch){
-         this.close();
-         return;
-      }
-      
       var i, value, score, result, calculateScore;
       var self     = this;
       var settings = self.settings;
@@ -15172,6 +15166,13 @@
       var self = this;
   
       if (self.isLocked || self.isOpen || (self.settings.mode === 'multi' && self.isFull())) return;
+
+      var minSearch = self.settings.minSearch || 0;
+      if (self.$control_input.val().length < minSearch){
+        this.close();
+        return;
+      }
+
       self.focus();
       self.isOpen = true;
       self.refreshState();
