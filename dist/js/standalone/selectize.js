@@ -15168,7 +15168,7 @@
       if (self.isLocked || self.isOpen || (self.settings.mode === 'multi' && self.isFull())) return;
 
       var minSearch = self.settings.minSearch || 0;
-      if (self.$control_input.val().length < minSearch){
+      if (_.trim(self.$control_input.val()).length < minSearch){
         this.close();
         return;
       }
